@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths-ignore:
       - '.github/*'
+      - '.github/workflows/*'
       - '.github/ISSUE_TEMPLATE/**'
   pull_request:
     branches: [ main ]
