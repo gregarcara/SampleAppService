@@ -27,7 +27,7 @@ jobs:
       run: dotnet build --no-restore -c Release
 
     - name: Package
-      run: dotnet publish --no-build -c Release --output ${{ env.PACKAGE_PATH }}
+      run: dotnet publish --no-build -c Release --property:PublishDir=${{ env.PACKAGE_PATH }}
 
     - name: Deploy
       uses: azure/webapps-deploy@v2
