@@ -3,6 +3,14 @@ name: "Build and Deploy"
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - '.github/*'
+      - '.github/ISSUE_TEMPLATE/**'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '.github/*'
+      - '.github/ISSUE_TEMPLATE/**'
 
 env:
   APP_SERVICE_PROJECT: 'SampleAppService'
