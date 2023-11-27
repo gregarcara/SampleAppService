@@ -34,5 +34,5 @@ jobs:
       with:
         app-name: ${{ vars.AZURE_APP_SERVICE_NAME }}
         publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_SETTINGS }}
-        package: ${{ env.DOTNET_ROOT }}/SampleAppService
+        package: ${{ env.PACKAGE_PATH }}
 
