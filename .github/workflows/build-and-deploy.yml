@@ -15,10 +15,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup dotnet ${{ env.DOTNET_VERSION }}
+    - name: Setup dotnet ${{ vars.DOTNET_VERSION }}
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+        dotnet-version: ${{ vars.DOTNET_VERSION }}
 
     - name: Restore
       run: dotnet restore
@@ -32,7 +32,7 @@ jobs:
     - name: Deploy
       uses: azure/webapps-deploy@v2
       with:
-        app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
-        publish-profile: $${ env.AZURE_APP_SERVICE_PUBLISH_SETTINGS }}
+        app-name: ${{ vars.AZURE_APP_SERVICE_NAME }}
+        publish-profile: $${ secrets.AZURE_APP_SERVICE_PUBLISH_SETTINGS }}
         package: ${{ env.PACKAGE_PATH }}
 
