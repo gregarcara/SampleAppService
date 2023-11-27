@@ -5,7 +5,6 @@ on:
     branches: [ main ]
     paths-ignore:
       - '.github/*'
-      - '.github/workflows/*'
       - '.github/ISSUE_TEMPLATE/**'
   pull_request:
     branches: [ main ]
@@ -33,6 +32,13 @@ jobs:
         id: git_short_hash
         run: echo "::set-output name=result::$(git rev-parse --short "${{ github.sha }}")"
 
+      - name: Bump build version
+        id: bump
+        uses: vers-one/dotnet-project-version-updater@v1.3
+        with:
+          file: "${{ env.APP_SERVICE_PROJECT }}/${{ env.APP_SERVICE_PROJECT }}.csproj"
+          version: bump-build
+
       - name: Restore
         run: dotnet restore
 
@@ -48,10 +54,15 @@ jobs:
           publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_SETTINGS }}
           package: ./publish
 
-
-
       - name: Upload ${{ vars.APP_SERVICE_PROJECT }} Artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.git_short_hash.outputs.result}}
           path: publish
+
+      - run: |
+          git config user.name "Github Actions Auto Version"
+          git config user.email "noreply@pcatg.com"
+          git add .
+          git commit -m "Bump project version to ${{ steps.bump.outputs.newVersion }}"
+          git push
