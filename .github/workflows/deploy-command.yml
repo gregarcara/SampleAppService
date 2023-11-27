@@ -19,15 +19,15 @@ jobs:
       - name: Download ${{ env.APP_SERVICE_PROJECT }} Artifact
         uses: actions/download-artifact@v3
         with:
-          name: ${{ env.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
-          path: ${{ env.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
+          name: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
+          path: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
 
       - name: Deploy ${{ env.APP_SERVICE_PROJECT }}
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ vars.AZURE_APP_SERVICE_NAME }}
           publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_SETTINGS }}
-          package: ${{ env.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
+          package: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
 
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v2
