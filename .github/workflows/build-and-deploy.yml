@@ -1,6 +1,8 @@
 name: "Build and Deploy"
 
-on: [push]
+on:
+  push:
+    branches: [ main ]
 
 env:
   PACKAGE_PATH: './published'
@@ -12,19 +14,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup dotnet ${{env.DOTNET_VERSION}}
+    - name: Setup dotnet ${{ env.DOTNET_VERSION }}
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: ${{env.DOTNET_VERSION}}
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Restore
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore -c Release
 
     - name: Package
-      run: dotnet publish --no-build -c Release -o ${{ env.PACKAGE_PATH }}
+      run: dotnet publish --no-build -c Release -output ${{ env.PACKAGE_PATH }}
 
     - name: Deploy
       uses: azure/webapps-deploy@v2
