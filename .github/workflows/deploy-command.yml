@@ -17,8 +17,11 @@ jobs:
           echo "env=$env" >> $env:GITHUB_OUTPUT
 
       - name: Download ${{ vars.APP_SERVICE_PROJECT }} Artifact
-        uses: actions/download-artifact@v3
+        uses: dawidd6/action-download-artifact@v2
         with:
+          github_token: ${{ secrets.PAT }}
+          workflow: build-and-deploy.yaml
+          commit: ${{ steps.vars.outputs.version }}
           name: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
           path: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
 
