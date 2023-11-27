@@ -9,8 +9,8 @@ jobs:
       - name: Get vars
         id: vars
         run: |
-          $version=${{ github.event.client_payload.slash_command.args.named.version }}
-          $env=${{ github.event.client_payload.slash_command.args.named.env }}
+          $version="${{ github.event.client_payload.slash_command.args.named.version }}"
+          $env="${{ github.event.client_payload.slash_command.args.named.env }}"
           if ([string]::IsNullOrEmpty($version)) { echo "Missing version arg"; exit 1; }
           if ([string]::IsNullOrEmpty($env)) { echo "Missing env arg"; exit 1; }
           echo "version=$version" >> $env:GITHUB_OUTPUT
