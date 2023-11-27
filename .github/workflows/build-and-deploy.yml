@@ -1,0 +1,35 @@
+name: "Build and Deploy"
+
+on: [push]
+
+env:
+  PACKAGE_PATH: './published'
+
+jobs:
+  builds:
+    name: Build and Deploy
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup dotnet ${{env.DOTNET_VERSION}}
+      uses: actions/setup-dotnet@v3
+      wish:
+        dotnet-version: ${{env.DOTNET_VERSION}}
+
+    - name: Restore
+      run: dotnet Restore
+
+    - name: Build
+      run: dotnet build --no-restore
+
+    - name: Package
+      run: dotnet publish --no-build -c Release -o ${{ env.PACKAGE_PATH }}
+
+    - name: Deploy
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
+        publish-profile: $${ env.AZURE_APP_SERVICE_PUBLISH_SETTINGS }}
+        package: ${{ env.PACKAGE_PATH }}
+
