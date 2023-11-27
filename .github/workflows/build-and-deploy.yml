@@ -37,7 +37,7 @@ jobs:
         uses: vers-one/dotnet-project-version-updater@v1.3
         with:
           file: "${{ env.APP_SERVICE_PROJECT }}/${{ env.APP_SERVICE_PROJECT }}.csproj"
-          version: bump-build
+          version: bump-revision
 
       - name: Restore
         run: dotnet restore
@@ -59,10 +59,3 @@ jobs:
         with:
           name: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.git_short_hash.outputs.result}}
           path: publish
-
-      - run: |
-          git config user.name "Github Actions Auto Version"
-          git config user.email "noreply@pcatg.com"
-          git add .
-          git commit -m "Bump project version to ${{ steps.bump.outputs.newVersion }}"
-          git push
