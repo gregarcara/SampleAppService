@@ -41,6 +41,14 @@ jobs:
 
       - name: Package
         run: dotnet publish --no-build -c Release -o ./publish ${{ vars.APP_SERVICE_PROJECT }}
+      - name: Deploy ${{ vars.APP_SERVICE_PROJECT }}
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ vars.AZURE_APP_SERVICE_NAME }}
+          publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_SETTINGS }}
+          package: ./publish
+
+
 
       - name: Upload ${{ vars.APP_SERVICE_PROJECT }} Artifact
         uses: actions/upload-artifact@v3
