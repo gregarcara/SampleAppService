@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 env:
-  PACKAGE_PATH: './publish'
+  APP_SERVICE_PROJECT: 'SampleAppService'
 
 jobs:
   builds:
@@ -13,26 +13,28 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup dotnet ${{ vars.DOTNET_VERSION }}
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: ${{ vars.DOTNET_VERSION }}
+      - name: Setup dotnet ${{ vars.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ vars.DOTNET_VERSION }}
 
-    - name: Restore
-      run: dotnet restore
+      - name: Get git short hash
+        id: git_short_hash
+        run: echo "::set-output name=result::$(git rev-parse --short "${{ github.sha }}")"
 
-    - name: Build
-      run: dotnet build --no-restore -c Release
+      - name: Restore
+        run: dotnet restore
 
-    - name: Package
-      run: dotnet publish --no-build -c Release -o ${{ env.PACKAGE_PATH }} --property:PublishDir=${{ env.PACKAGE_PATH }} SampleAppService
+      - name: Build
+        run: dotnet build --no-restore -c Release
 
-    - name: Deploy
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ vars.AZURE_APP_SERVICE_NAME }}
-        publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_SETTINGS }}
-        package: ${{ env.PACKAGE_PATH }}
+      - name: Package
+        run: dotnet publish --no-build -c Release -o ./publish ${{ env.APP_SERVICE_PROJECT }}
 
+      - name: Upload ${{ env.APP_SERVICE_PROJECT }} Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.APP_SERVICE_PROJECT }}-${{ steps.git_short_hash.outputs.result}}
+          path: publish
