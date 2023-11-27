@@ -21,7 +21,7 @@ jobs:
         with:
           github_token: ${{ secrets.PAT }}
           workflow: build-and-deploy.yaml
-          commit: ${{ steps.vars.outputs.version }}
+          commit: 3af593d345383aa7540f29ccf34e69e53f9fbdc5
           name: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
           path: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
 
