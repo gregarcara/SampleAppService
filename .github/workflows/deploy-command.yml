@@ -6,6 +6,29 @@ jobs:
   deploy:
     runs-on: windows-latest
     steps:
+      - name: Get vars
+        id: vars
+        run: |
+          version=${{ github.event.client_payload.slash_command.args.named.version }}
+          env=${{ github.event.client_payload.slash_command.args.named.env }}
+          if [[ -z "$version" ]]; then echo "Missing version arg"; exit 1; fi
+          if [[ -z "$env" ]]; then echo "Missing env arg"; exit 1; fi
+          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "env=$env" >> $GITHUB_OUTPUT
+
+      - name: Download ${{ env.APP_SERVICE_PROJECT }} Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
+          path: ${{ env.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
+
+      - name: Deploy ${{ env.APP_SERVICE_PROJECT }}
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ vars.AZURE_APP_SERVICE_NAME }}
+          publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_SETTINGS }}
+          package: ${{ env.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
+
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v2
         with:
