@@ -27,12 +27,12 @@ jobs:
       run: dotnet build --no-restore -c Release
 
     - name: Package
-      run: dotnet publish --no-build -c Release --property:PublishDir=${{ env.PACKAGE_PATH }}
+      run: dotnet publish --no-build -c Release --property:PublishDir=${{ env.DOTNET_ROOT }}/SampleAppService
 
     - name: Deploy
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ vars.AZURE_APP_SERVICE_NAME }}
         publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_SETTINGS }}
-        package: ${{ env.PACKAGE_PATH }}
+        package: ${{ env.DOTNET_ROOT }}/SampleAppService
 
