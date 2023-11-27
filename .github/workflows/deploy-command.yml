@@ -17,11 +17,11 @@ jobs:
           echo "env=$env" >> $env:GITHUB_OUTPUT
 
       - name: Download ${{ vars.APP_SERVICE_PROJECT }} Artifact
-        uses: dawidd6/action-download-artifact@v2
+        uses: gregarcara/action-download-artifact@main
         with:
           github_token: ${{ secrets.PAT }}
-          workflow: build-and-deploy.yaml
-          commit: 3af593d345383aa7540f29ccf34e69e53f9fbdc5
+          name: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
+          path: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
 
       - name: Deploy ${{ vars.APP_SERVICE_PROJECT }}
         uses: azure/webapps-deploy@v2
