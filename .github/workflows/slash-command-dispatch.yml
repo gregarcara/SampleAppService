@@ -15,7 +15,6 @@ jobs:
               {
                 "command": "deploy",
                 "permission": "admin",
-                "issue_type": "both",
                 "repository": "gregarcara/SampleAppService",
                 "static_args": [
                   "version",
