@@ -16,20 +16,6 @@ jobs:
           echo "version=$version" >> $env:GITHUB_OUTPUT
           echo "env=$env" >> $env:GITHUB_OUTPUT
 
-      - name: Download ${{ vars.APP_SERVICE_PROJECT }} Artifact
-        uses: gregarcara/action-download-artifact@main
-        with:
-          github_token: ${{ secrets.PAT }}
-          name: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
-          path: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
-
-      - name: Deploy ${{ vars.APP_SERVICE_PROJECT }}
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ vars.AZURE_APP_SERVICE_NAME }}
-          publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_SETTINGS }}
-          package: ${{ vars.APP_SERVICE_PROJECT }}-${{ steps.vars.outputs.version }}
-
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v2
         with:
