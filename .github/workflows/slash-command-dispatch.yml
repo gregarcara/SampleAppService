@@ -10,15 +10,5 @@ jobs:
         uses: peter-evans/slash-command-dispatch@v3
         with:
           token: ${{ secrets.PAT }}
-          config: >
-            [
-              {
-                "command": "deploy",
-                "permission": "admin",
-                "repository": "gregarcara/SampleAppService",
-                "static_args": [
-                  "version",
-                  "env"
-                ]
-              }
-            ]
+          commands: deploy
+          permission: admin
