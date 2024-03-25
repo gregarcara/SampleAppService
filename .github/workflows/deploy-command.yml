@@ -22,8 +22,16 @@ jobs:
       #     if ([string]::IsNullOrEmpty($env)) { echo "Missing env arg"; exit 1; }
       #     echo "version=$version" >> $env:GITHUB_OUTPUT
       #     echo "env=$env" >> $env:GITHUB_OUTPUT
+      - name: Get branch name
+        id: get_branch_name
+        run: |
+          result={{ github.event.client_payload.pull_request.head.ref }}
+          result=${result:-"main"}
+          echo "TRIGGER_BRANCH=${result}"
+
 
       - uses: actions/checkout@v4
+        ref: 
 
         # - name: Setup dotnet ${{ vars.DOTNET_VERSION }}
         #   uses: actions/setup-dotnet@v3
@@ -36,11 +44,7 @@ jobs:
 
       - name: Ref
         id: get_ref
-        run: echo ${{ github.ref }}
-
-      - name: PR Ref
-        id: get_pr_ref
-        run: echo "Branch :"${{ github.event.client_payload.pull_request.head.ref }}
+        run: echo $TRIGGER_BRANCH
 
           # - name: Restore
           #   run: dotnet restore
