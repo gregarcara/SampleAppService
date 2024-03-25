@@ -24,6 +24,7 @@ jobs:
       #     echo "env=$env" >> $env:GITHUB_OUTPUT
       - name: Get branch name
         id: get_branch_name
+        shell: bash
         run: |
           result={{ github.event.client_payload.pull_request.head.ref }}
           result=${result:-"main"}
