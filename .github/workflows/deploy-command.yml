@@ -34,9 +34,13 @@ jobs:
         id: git_short_hash
         run: echo "::set-output name=result::$(git rev-parse --short "${{ github.sha }}")"
 
-      - name: Get git short hash
+      - name: Ref
         id: get_ref
         run: echo ${{ github.ref }}
+
+      - name: PR Ref
+        id: get_pr_ref
+        run: echo ${{ github.event.client_payload.pull_request.head.ref }}
 
           # - name: Restore
           #   run: dotnet restore
