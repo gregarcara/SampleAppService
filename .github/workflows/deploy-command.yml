@@ -2,6 +2,13 @@ name: deploy-command
 on:
   repository_dispatch:
     types: [deploy-command]
+
+env:
+  CONTAINER_NAME: deployuatwebapp
+  ACCOUNT_NAME: randwebapps
+  RESOURCE_GROUP: infrastructureRG
+  SERVICE_APP_NAME: RandUATportal
+
 jobs:
   deploy:
     runs-on: windows-latest
@@ -16,11 +23,102 @@ jobs:
       #     echo "version=$version" >> $env:GITHUB_OUTPUT
       #     echo "env=$env" >> $env:GITHUB_OUTPUT
 
-      - name: Add reaction
-        uses: peter-evans/create-or-update-comment@v2
-        with:
-          token: ${{ secrets.PAT }}
-          reaction-token: ${{ secrets.PAT }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
-          reaction-type: hooray
+      - uses: actions/checkout@v4
+
+        # - name: Setup dotnet ${{ vars.DOTNET_VERSION }}
+        #   uses: actions/setup-dotnet@v3
+        #   with:
+        #     dotnet-version: ${{ vars.DOTNET_VERSION }}
+
+      - name: Get git short hash
+        id: git_short_hash
+        run: echo "::set-output name=result::$(git rev-parse --short "${{ github.sha }}")"
+
+      - name: Get git short hash
+        id: get_ref
+        run: echo ${{ github.ref }}
+
+          # - name: Restore
+          #   run: dotnet restore
+
+          # - name: Build DAL
+          #   run: dotnet build RandERP.DAL --no-restore -c Debug
+
+          # - name: Build Common
+          #   run: dotnet build RandERP.Common --no-restore -c Debug
+
+          # - name: Build Portal
+          #   run: dotnet build Portal --no-restore -c Debug
+          #     
+          # - name: Build AbsEomGLWebJob
+          #   run: dotnet build WebJobs/AbsEomGLWebJob --no-restore -c Debug
+
+          # - name: Build APToGPWebJob
+          #   run: dotnet build WebJobs/APToGPWebJob --no-restore -c Debug
+
+ #     - name: Build AdonisToOrigamiWebJob
+ #       run: dotnet build WebJobs/AdonisToOrigamiWebJob --no-restore -c Debug
+
+ #     - name: Build AdonisToSummTotalWebJob
+ #       run: dotnet build WebJobs/AdonisToSummTotalWebJob --no-restore -c Debug
+        
+          # - name: Build MSCCustomDataWebJob
+          #   run: dotnet build WebJobs/MSCCustomDataWebJob --no-restore -c Debug
+          #  
+          # - name: Package Portal
+          #   run: dotnet publish Portal --no-build -c Debug -o .\publish
+
+          # - name: Package AbsEomGLWebJob
+          #   run: dotnet publish WebJobs/AbsEomGLWebJob --no-build -c Debug -o .\publish\app_data\jobs\Triggered\AbsEomGLWebJob
+
+          # - name: Package APToGPWebJob
+          #   run: dotnet publish WebJobs/APToGPWebJob --no-build -c Debug -o .\publish\app_data\jobs\Triggered\APToGPWebJob
+
+#      - name: Package AdonisToOrigamiWebJob
+#        run: dotnet publish WebJobs/AdonisToOrigamiWebJob --no-build -c Debug -o .\publish\app_data\jobs\Triggered\AdonisToOrigamiWebJob
+
+#      - name: Package AdonisToSummTotalWebJob
+#        run: dotnet publish WebJobs/AdonisToSummTotalWebJob --no-build -c Debug -o .\publish\app_data\jobs\Triggered\AdonisToSummTotalWebJob
+
+          # - name: Package MSCCustomDataWebJob
+          #   run: dotnet publish WebJobs/MSCCustomDataWebJob --no-build -c Debug -o .\publish\app_data\jobs\Triggered\MSCCustomDataWebJob
+
+          # - name: Zip the app contents
+          #   uses: papeloto/action-zip@v1
+          #   with:
+          #     files: ./publish
+          #     dest: ./publish.zip
+
+          # - name: Set SAS token expiration
+          #   shell: bash
+          #   run: echo "expiry=`date -u --date='+10 minutes' '+%Y-%m-%dT%H:%MZ'`" >> $GITHUB_ENV
+          # - name: Azure Login
+          #   uses: azure/login@v1
+          #   with:
+          #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+          # - name: Deploy
+          #   shell: bash
+          #   run: |
+          #     set -x
+          #     az storage container create -n $CONTAINER_NAME --account-name $ACCOUNT_NAME
+          #     az storage blob upload -f ./publish.zip --account-name $ACCOUNT_NAME -c $CONTAINER_NAME -n $ACCOUNT_NAME
+          #     ZIP_URL=$(az storage blob generate-sas --full-uri --permissions r --expiry $expiry --account-name $ACCOUNT_NAME -c $CONTAINER_NAME -n $ACCOUNT_NAME | xargs)
+          #     az rest --method PUT \
+          #         --uri "https://management.azure.com/subscriptions/e672c783-b7a3-410c-90c7-5bc28ba7f7ac/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Web/sites/$SERVICE_APP_NAME/extensions/onedeploy?api-version=2020-12-01" \
+          #         --body '{
+          #             "properties": {
+          #                 "type": "zip",
+          #                 "packageUri": "'"${ZIP_URL}"'"
+          #             }
+          #         }'
+          #     az storage container delete -n $CONTAINER_NAME --account-name $ACCOUNT_NAME 
+
+          # - name: Add reaction
+          #   uses: peter-evans/create-or-update-comment@v2
+          #   with:
+          #     token: ${{ secrets.PAT }}
+          #     reaction-token: ${{ secrets.PAT }}
+          #     repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          #     comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+          #     reaction-type: hooray
